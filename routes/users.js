@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
+const Users = require('../models/user');
+
 const bodyParser = require('body-parser');
 var User = require('../models/user');
 
@@ -10,8 +12,15 @@ var authenticate = require('../authenticate');
 router.use(bodyParser.json());
 
 /* GET users listing. */
-router.get('/', function (req, res, next) {
-    res.send('respond with a resource');
+router.get('/', authenticate.verifyUser, authenticate.verifyAdmin, function (req, res, next) {
+    Users.find({})
+        .then((users) => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(users);
+        }, (err) => next(err))
+        .catch((err) => next(err));
+    // res.send('respond with a resource');
 });
 
 router.post('/signup', (req, res, next) => {
