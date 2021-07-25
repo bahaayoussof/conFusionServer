@@ -15,6 +15,7 @@ var User = new Schema({
         type: String,
         require: true
     },
+    facebookId: String,
     admin: {
         type: Boolean,
         default: false
